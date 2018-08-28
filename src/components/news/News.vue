@@ -1,24 +1,23 @@
 <template>
-  <section class="newsList">
-    <h2>NewsList</h2>
+  <section class="articles">
+    <h2>News</h2>
 
     <NewsSearch :onSearch="handleSearch"/>
     
     <Loader :loading="loading"/>
 
-    <pre v-show="error" class="error">
+    <!-- <pre v-show="error" class="error">
       {{error}}
-    </pre>
+    </pre> -->
 
     <p v-if="search">Searching for &quot;{{ search }}&quot;</p>
     <div class="search-container">
-      <ul v-if="newsList">
-        <News v-for="news in newsList"
-          :key="news.name"
-          :news="news"
+      <ul v-if="articles">
+        <Article v-for="article in articles"
+          :key="article.title"
+          :article="article"
         />
       </ul>
-
     </div>
 
   </section>
@@ -26,39 +25,41 @@
 
 <script>
 import api from '../../services/api';
-import Person from './Person';
-import PeopleSearch from './PeopleSearch';
+import Article from './Article';
+import NewsSearch from './NewsSearch';
 import Loader from './Loader';
+
 export default {
   data() {
     return {
-      people: null,
+      articles: null,
       loading: false,
       error: null,
       search: '',
-      total: 0
+      totalResults: null
     };
   },
   components: {
-    Person,
-    PeopleSearch,
+    Article,
+    NewsSearch,
     Loader
   },
   // created() {
-  //   this.searchPeople();
+  //   this.searchNews();
   // },
   methods: {
     handleSearch(search) {
       this.search = search;
-      this.searchPeople();
+      this.searchNews();
     },
-    searchPeople() {
+    searchNews() {
       this.loading = true;
       this.error = null;
-      api.getPeople(this.search)
+
+      api.getNews(this.search)
         .then(response => {
-          this.people = response.results;
-          this.total = response.count;
+          this.articles = response.articles;
+          this.total = response.totalResults;
           this.loading = false;
         })
         .catch(err => {

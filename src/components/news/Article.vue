@@ -1,13 +1,15 @@
 <template>
   <li>
-    {{news.name}} born {{news.birth_year}}
+   <p>{{ article.title }}</p>
+   <p>{{ article.author }}</p>
   </li>
 </template>
 
 <script>
+
 export default {
   props: {
-    news: Object
+    article: Object
   }
 };
 </script>
